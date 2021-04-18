@@ -16,7 +16,7 @@ provider:
 frameworkVersion: "2"
 plugins:
   - serverless-google-cloudfunctions
-  # - serverless-python-requirements
+  - serverless-python-requirements
 package:
   exclude:
     - node_modules/**
