@@ -6,6 +6,7 @@ authors = ["yuya-okada527 <yuya.okada527@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+google-cloud-pubsub = "^2.4.1"
 
 [tool.poetry.dev-dependencies]
 
