@@ -54,7 +54,7 @@ jobs:
         env:
           SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
       - name: setup serverless
-        run: npm i serverless
+        run: npm i -g serverless
       - name: serverless deploy
         run: sls deploy
         env:
