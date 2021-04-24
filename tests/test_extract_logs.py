@@ -1,4 +1,4 @@
-from app.main import extract_logs
+from main import extract_logs
 
 def test_extract_logs_not_json():
 
