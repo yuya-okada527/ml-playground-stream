@@ -12,3 +12,12 @@ def extract_logs(event, context):
 
     # リポジトリを取得
     repository = create_object_storage_repository()
+
+    # データを取得
+    data = repository.download_contents(
+        bucket=bucket,
+        key=object_key
+    )
+
+    for log in data.split("\n"):
+        print(log)

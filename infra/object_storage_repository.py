@@ -8,7 +8,7 @@ GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
 
 class ObjectStorageRepository(abc.ABC):
 
-    def load_contents(self, bucket: str, key: str) -> str:
+    def download_contents(self, bucket: str, key: str) -> str:
         raise NotImplementedError()
 
 
@@ -21,7 +21,7 @@ class GcsRepository(ObjectStorageRepository):
         self.__buckets = {}
 
 
-    def load_contents(self, bucketName: str, key: str) -> str:
+    def download_contents(self, bucketName: str, key: str) -> str:
 
         bucket = self.__get_bucket(bucketName)
 
