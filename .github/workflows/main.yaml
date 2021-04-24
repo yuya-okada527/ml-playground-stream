@@ -54,8 +54,8 @@ jobs:
         env:
           SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
       - name: setup serverless
-        run: npm i -g serverless
+        run: npm i serverless
       - name: serverless deploy
-        run: sls deploy
+        run: npm run sls:deploy
         env:
           CREDENTIALS_PATH: $GITHUB_WORKSPACE/secrets/keyfile.json

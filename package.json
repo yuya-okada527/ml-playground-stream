@@ -5,5 +5,8 @@
   "devDependencies": {
     "serverless-google-cloudfunctions": "^4.0.0",
     "serverless-python-requirements": "^5.1.1"
+  },
+  "scripts": {
+    "sls:deploy": "sls deploy"
   }
 }
