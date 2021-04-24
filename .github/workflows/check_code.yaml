@@ -33,6 +33,6 @@ jobs:
         run: |
           mkdir $GITHUB_WORKSPACE/secrets
           echo $SERVICE_ACCOUNT_CREDENTIALS | base64 -d > $GITHUB_WORKSPACE/secrets/keyfile.json
-          echo $GITHUB_WORKSPACE/secrets/keyfile.json
+          cat $GITHUB_WORKSPACE/secrets/keyfile.json
         env:
           SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
