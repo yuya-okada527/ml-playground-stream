@@ -58,4 +58,4 @@ jobs:
       - name: serverless deploy
         run: npm run sls:deploy
         env:
-          CREDENTIALS_PATH: $GITHUB_WORKSPACE/secrets/keyfile.json
+          CREDENTIALS_PATH: secrets/keyfile.json
