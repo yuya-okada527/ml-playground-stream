@@ -53,9 +53,9 @@ jobs:
           echo $SERVICE_ACCOUNT_CREDENTIALS | base64 -d > $GITHUB_WORKSPACE/secrets/keyfile.json
         env:
           SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
+      - name: setup serverless
+        run: npm i serverless
       - name: serverless deploy
-        uses: serverless/github-action@master
-        with:
-          args: deploy
+        run: sls deploy
         env:
           CREDENTIALS_PATH: $GITHUB_WORKSPACE/secrets/keyfile.json
