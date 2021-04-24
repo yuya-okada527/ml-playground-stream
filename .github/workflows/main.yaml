@@ -1,0 +1,52 @@
+name: main branch pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Check the source code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Poetry
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - name: Add path for Poetry
+        run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - name: Install Dependencies
+        run: poetry install
+      # TODO
+      # - name: Check flake8
+      #   run: poetry run flake8 src/app --ignore E501,E128
+      # - name: Check mypy
+      #   run: poetry run mypy src/app --ignore-missing-imports --show-column-numbers --check-untyped-defs
+      - name: Unit test
+        run: poetry run pytest tests -v
+  deploy:
+    name: Deploy to GCP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: npm install
+        run: npm install
+      - name: Setup Credentials
+        run: |
+          mkdir $GITHUB_WORKSPACE/secrets
+          echo $SERVICE_ACCOUNT_CREDENTIALS | base64 -d > $GITHUB_WORKSPACE/secrets/keyfile.json
+        env:
+          SERVICE_ACCOUNT_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
+      - name: serverless deploy
+        uses: serverless/github-action@master
+        with:
+          args: deploy
+        env:
+          CREDENTIALS_PATH: $GITHUB_WORKSPACE/secrets/keyfile.json
