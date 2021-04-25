@@ -1,8 +1,12 @@
 from domain.enums import LogType
 import json
+from more_itertools import chunked
 from typing import Dict, Generator
 from collections import defaultdict
 from infra.object_storage_repository import ObjectStorageRepository
+
+
+CHUNK_SIZE = 100
 
 
 def extract_logs_service(
@@ -33,9 +37,10 @@ def extract_logs_service(
         # ログタイプごとにデータを保持
         log_data[log_type].append(log_type.transform(log_dict))
 
+    # チャンクごとに、メッセージ化
     for log_type, records in log_data.items():
-        for r in records:
-            print(r)
+        for i, record_chunk in enumerate(chunked(records, CHUNK_SIZE)):
+            pass
 
 
 def _is_not_app_log(log_message: str) -> bool:
@@ -48,6 +53,11 @@ def _is_not_app_log(log_message: str) -> bool:
 def _generate_app_log(data: str) -> Generator[str, None, None]:
 
     for log in data.split("\n"):
+
+        # 空のログはスキップ
+        if not log:
+            continue
+
         json_log = json.loads(log)
         log_message = json_log.get("textPayload")
 
