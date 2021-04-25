@@ -3,7 +3,7 @@ from infra.object_storage_repository import create_object_storage_repository
 
 def extract_logs(event, context):
 
-    # ログ取得先をメッセージから取得
+    # ログ取得先をAttributesから取得
     bucket_name = event["attributes"]["bucketId"]
     object_key = event["attributes"]["objectId"]
 
@@ -20,3 +20,8 @@ def extract_logs(event, context):
         object_key=object_key,
         repository=repository
     )
+
+
+def load_to_gcs(event, context):
+
+    print("event: {event}")

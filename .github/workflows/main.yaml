@@ -30,6 +30,8 @@ jobs:
       #   run: poetry run mypy src/app --ignore-missing-imports --show-column-numbers --check-untyped-defs
       - name: Unit test
         run: poetry run pytest tests -v
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   deploy:
     name: Deploy to GCP
     runs-on: ubuntu-latest
