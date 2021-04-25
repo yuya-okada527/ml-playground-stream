@@ -1,6 +1,8 @@
+from domain.log_transformer import create_transformer
 from domain.enums import LogType
 import json
 from typing import Dict, Generator
+from collections import defaultdict
 from infra.object_storage_repository import ObjectStorageRepository
 
 
@@ -17,12 +19,23 @@ def extract_logs_service(
     )
 
     # 1レコードずつ処理していく
+    log_data = defaultdict(list)
     for log_message in _generate_app_log(data):
         # LTSVをパース
         log_dict = _parse_ltsv(log_message)
 
         # ログタイプを取得
         log_type = _extract_log_type(log_dict)
+
+        # 取得できない場合スキップ
+        if log_type is None:
+            continue
+
+        # 変換機を取得
+        transformer = create_transformer(log_type)
+
+        # ログタイプごとにデータを保持
+        log_data[log_type].append(transformer.transform(log_dict))
 
 
 def _is_not_app_log(log_message: str) -> bool:

@@ -5,15 +5,18 @@ from typing import Dict
 
 class Transformer(abc.ABC):
 
+    def __init__(self, separator: str = "\t") -> None:
+        super().__init__()
+        self._separator = separator
+
     def transform(self, log_dict: Dict[str, str]) -> str:
         raise NotImplementedError()
 
 
 class CoreApiAppTransformer(Transformer):
 
-    def __init__(self, separator: str = "\t") -> None:
+    def __init__(self) -> None:
         super().__init__()
-        self.__separator = separator
         self.__COLUMN_NAMES = [
             "Level",
             "Time",
@@ -25,7 +28,7 @@ class CoreApiAppTransformer(Transformer):
 
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
-        return self.__separator.join(values)
+        return self._separator.join(values)
 
 
 def create_transformer(log_type: LogType) -> Transformer:
