@@ -29,8 +29,8 @@ def load_to_gcs(event, context):
     repository = create_object_storage_repository()
 
     # ログ取得先をAttributesから取得
-    bucket_name = event["attributes"]["bucketId"]
-    object_key = event["attributes"]["objectId"]
+    bucket_name = event["attributes"]["bucket"]
+    object_key = event["attributes"]["object_key"]
 
     # アップロードするデータを取得
     data = b64decode(event["data"].encode("utf-8")).decode("utf-8")

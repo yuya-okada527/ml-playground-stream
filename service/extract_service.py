@@ -50,7 +50,7 @@ def extract_logs_service(
     for log_type, records in log_data.items():
         for i, record_chunk in enumerate(chunked(records, CHUNK_SIZE)):
             # オブジェクトのキーを作成
-            object_key = _make_object_key(
+            object_id = _make_object_key(
                 table_name=log_type.value.table_name,
                 object_id=object_key,
                 chunk_num=i
@@ -69,7 +69,7 @@ def extract_logs_service(
                 topic=topic,
                 data=message.encode("utf-8"),
                 bucket="ml-playground-log-table-bucket",
-                object_key=object_key
+                object_key=object_id
             )
 
 
