@@ -43,6 +43,9 @@ def extract_logs_service(
         # ログタイプごとにデータを保持
         log_data[log_type].append(log_type.transform(log_dict))
 
+    for e in LogType:
+        print(f"{e.name}:  {len(log_data[e])}")
+
     # チャンクごとに、メッセージ化
     for log_type, records in log_data.items():
         for i, record_chunk in enumerate(chunked(records, CHUNK_SIZE)):
