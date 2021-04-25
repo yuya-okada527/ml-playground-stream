@@ -114,7 +114,7 @@ def _parse_ltsv(ltsv_log: str) -> Dict[str, str]:
     log_dict = {}
     for log_item in ltsv_log.split("\t"):
         column = log_item.split(":")
-        log_dict[column[0]] = column[1]
+        log_dict[column[0]] = ":".join(column[1:])  # タイムスタンプがうまくパースできないため
 
     return log_dict
 
