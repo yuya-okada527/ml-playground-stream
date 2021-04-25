@@ -11,6 +11,9 @@ class ObjectStorageRepository(abc.ABC):
     def download_contents(self, bucket_name: str, key: str) -> str:
         raise NotImplementedError()
 
+    def upload(self, bucket_name: str, key: str, contents: str) -> None:
+        raise NotImplementedError()
+
 
 class GcsRepository(ObjectStorageRepository):
 
@@ -28,6 +31,14 @@ class GcsRepository(ObjectStorageRepository):
         blob = bucket.blob(key)
 
         return blob.download_as_text()
+
+    def upload(self, bucket_name: str, key: str, contents: str) -> None:
+
+        bucket = self.__get_bucket(bucket_name)
+
+        blob = bucket.blob(key)
+
+        blob.upload_from_string(contents)
 
     def __init_bucket(self, bucket) -> None:
         self.__buckets[bucket] = self.__client.get_bucket(bucket)
