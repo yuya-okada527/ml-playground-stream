@@ -41,7 +41,7 @@ def extract_logs_service(
             continue
 
         # ログタイプごとにデータを保持
-        log_data[log_type].append(log_type.transform(log_dict))
+        log_data[log_type].append(log_type.value.transform(log_dict))
 
     for e in LogType:
         print(f"{e.name}:  {len(log_data[e])}")
@@ -51,7 +51,7 @@ def extract_logs_service(
         for i, record_chunk in enumerate(chunked(records, CHUNK_SIZE)):
             # オブジェクトのキーを作成
             object_key = _make_object_key(
-                table_name=log_type.table_name,
+                table_name=log_type.value.table_name,
                 object_id=object_key,
                 chunk_num=i
             )
@@ -59,8 +59,8 @@ def extract_logs_service(
             # メッセージを作成
             message = _make_message(
                 records=record_chunk,
-                columns=log_type.columns,
-                separator=log_type.transform.separator
+                columns=log_type.value.columns,
+                separator=log_type.value.transform.separator
             )
 
             # メッセージを公開
