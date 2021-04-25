@@ -50,10 +50,23 @@ class CoreApiAccessTransformer(Transformer):
         return self._separator.join(values)
 
 
+class UserFeedbackLikeSimilarMovieTransformer(Transformer):
+
+    def __init__(self, separator: str = "\t") -> None:
+        super().__init__(separator=separator)
+
+    def transform(self, log_dict: Dict[str, str]) -> str:
+        pass
+
+
+
 def create_transformer(log_type: LogType) -> Transformer:
 
     if log_type == LogType.CORE_API_APP:
         return CoreApiAppTransformer()
-
+    elif log_type == LogType.CORE_API_ACCESS:
+        return CoreApiAccessTransformer()
+    elif log_type == LogType.USER_FEEDBACK_LIKE_SIM_MOVIE:
+        return UserFeedbackLikeSimilarMovieTransformer()
 
     raise ValueError(f"{log_type}は未実装のタイプです")
