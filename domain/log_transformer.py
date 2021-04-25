@@ -10,7 +10,7 @@ class LogTransformer(abc.ABC):
         super().__init__()
         self._separator = separator
 
-    def transform(self, log_dict: Dict[str, str]) -> str:
+    def __call__(self, log_dict: Dict[str, str]) -> str:
         raise NotImplementedError()
 
 
@@ -25,7 +25,7 @@ class CoreApiAppTransformer(LogTransformer):
             "Message"
         ]
 
-    def transform(self, log_dict: Dict[str, str]) -> str:
+    def __call__(self, log_dict: Dict[str, str]) -> str:
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
         return csv_utils.make_record(values, self._separator)
@@ -45,7 +45,7 @@ class CoreApiAccessTransformer(LogTransformer):
             "StatusCode"
         ]
 
-    def transform(self, log_dict: Dict[str, str]) -> str:
+    def __call__(self, log_dict: Dict[str, str]) -> str:
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
         return csv_utils.make_record(values, self._separator)
@@ -61,7 +61,7 @@ class UserFeedbackLikeSimilarMovieTransformer(LogTransformer):
             "like"
         ]
 
-    def transform(self, log_dict: Dict[str, str]) -> str:
+    def __call__(self, log_dict: Dict[str, str]) -> str:
 
         # 一階層目の項目を取得
         values = [
@@ -85,5 +85,7 @@ class MovieSimModelUsedCountTransformer(LogTransformer):
             "Message"
         ]
 
-    def transform(self, log_dict: Dict[str, str]) -> str:
-        pass
+    def __call__(self, log_dict: Dict[str, str]) -> str:
+        values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
+
+        return csv_utils.make_record(values, self._separator)

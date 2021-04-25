@@ -6,7 +6,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class LogTypeFields:
     name: str
-    transformer: LogTransformer
+    transform: LogTransformer
     columns: List[str]
     table_name: str
 
@@ -14,7 +14,7 @@ class LogTypeFields:
 class LogType(Enum):
     CORE_API_APP = LogTypeFields(
         name="CoreApiApp",
-        transformer=CoreApiAppTransformer(),
+        transform=CoreApiAppTransformer(),
         columns=[
             "level",
             "date_time",
@@ -25,7 +25,7 @@ class LogType(Enum):
     )
     CORE_API_ACCESS = LogTypeFields(
         name="CoreApiAccess",
-        transformer=CoreApiAccessTransformer(),
+        transform=CoreApiAccessTransformer(),
         columns=[
             "date_time",
             "process_time",
@@ -39,7 +39,7 @@ class LogType(Enum):
     )
     USER_FEEDBACK_LIKE_SIM_MOVIE = LogTypeFields(
         name="UserFeedbackLikeSimilarMovie",
-        transformer=UserFeedbackLikeSimilarMovieTransformer(),
+        transform=UserFeedbackLikeSimilarMovieTransformer(),
         columns=[
             "date_time",
             "movie_id",
@@ -50,7 +50,7 @@ class LogType(Enum):
     )
     MOVIE_SIM_MODEL_USED_COUNT = LogTypeFields(
         name="MovieSimModelUsedCount",
-        transformer=MovieSimModelUsedCountTransformer(),
+        transform=MovieSimModelUsedCountTransformer(),
         columns=[
             "date_time",
             "model_type"

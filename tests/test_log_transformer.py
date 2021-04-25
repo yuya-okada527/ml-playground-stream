@@ -1,7 +1,7 @@
 import json
 import time
 from datetime import datetime
-from domain.log_transformer import CoreApiAccessTransformer, CoreApiAppTransformer, UserFeedbackLikeSimilarMovieTransformer
+from domain.log_transformer import CoreApiAccessTransformer, CoreApiAppTransformer, MovieSimModelUsedCountTransformer, UserFeedbackLikeSimilarMovieTransformer
 
 def test_core_api_transformer_transform():
 
@@ -19,7 +19,7 @@ def test_core_api_transformer_transform():
     expected = f"info\t{time}\t{__file__}\tmessage"
 
     # 検証
-    assert transformer.transform(log_dict) == expected
+    assert transformer(log_dict) == expected
 
 
 def test_core_api_access_transformer_transform():
@@ -42,7 +42,7 @@ def test_core_api_access_transformer_transform():
     expected = f"{date_time}\t{process_time}\t127.0.0.1\tGET\t/path\tkey=value\t200"
 
     # 検証
-    assert transformer.transform(log_dict) == expected
+    assert transformer(log_dict) == expected
 
 
 def test_user_feedback_transformer_transform():
@@ -64,4 +64,22 @@ def test_user_feedback_transformer_transform():
     expected = f"{date_time}\t0\ttmdb-sim\t0"
 
     # 検証
-    assert transformer.transform(log_dict) == expected
+    assert transformer(log_dict) == expected
+
+
+def test_movie_sim_model_used_count_transformer():
+
+    # テストデータ
+    transformer = MovieSimModelUsedCountTransformer()
+    date_time = datetime.now().isoformat()
+    log_dict = {
+        "Level": "info",
+        "Time": date_time,
+        "Message": "tmdb-sim"
+    }
+
+    # 期待値
+    expected = f"{date_time}\ttmdb-sim"
+
+    # 検証
+    assert transformer(log_dict) == expected

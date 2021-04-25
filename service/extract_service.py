@@ -31,7 +31,7 @@ def extract_logs_service(
             continue
 
         # ログタイプごとにデータを保持
-        log_data[log_type].append(log_type.transformer.transform(log_dict))
+        log_data[log_type].append(log_type.transform(log_dict))
 
 
 def _is_not_app_log(log_message: str) -> bool:
