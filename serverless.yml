@@ -6,9 +6,9 @@ provider:
   runtime: python38
   region: asia-northeast1
   project: ml-playground-306716
-  # credentials: ${env:CREDENTIALS_PATH}
+  credentials: ${env:CREDENTIALS_PATH}
   # TODO ローカルでも環境変数を利用する
-  credentials: ~/.gcloud/keys/ml-playground-log-stream.json
+  # credentials: ~/.gcloud/keys/ml-playground-log-stream.json
 
 frameworkVersion: "2"
 plugins:
