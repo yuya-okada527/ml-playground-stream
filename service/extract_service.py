@@ -67,7 +67,7 @@ def extract_logs_service(
             topic = client.topic_path(SETTINGS.gcp_project_id, "load-to-gcs-topic")
             client.publish(
                 topic=topic,
-                data=message,
+                data=message.encode("utf-8"),
                 bucket="ml-playground-log-table-bucket",
                 object_key=object_key
             )
