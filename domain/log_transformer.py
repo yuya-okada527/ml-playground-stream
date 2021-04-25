@@ -5,7 +5,7 @@ from typing import Dict
 
 class Transformer(abc.ABC):
 
-    def __init__(self, separator: str = "\t") -> None:
+    def __init__(self, separator: str) -> None:
         super().__init__()
         self._separator = separator
 
@@ -15,8 +15,8 @@ class Transformer(abc.ABC):
 
 class CoreApiAppTransformer(Transformer):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, separator: str = "\t") -> None:
+        super().__init__(separator=separator)
         self.__COLUMN_NAMES = [
             "Level",
             "Time",
@@ -25,8 +25,27 @@ class CoreApiAppTransformer(Transformer):
         ]
 
     def transform(self, log_dict: Dict[str, str]) -> str:
-
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
+
+        return self._separator.join(values)
+
+
+class CoreApiAccessTransformer(Transformer):
+
+    def __init__(self, separator: str = "\t") -> None:
+        super().__init__(separator=separator)
+        self.__COLUMN_NAMES = [
+            "Time",
+            "ProcessTime",
+            "Client",
+            "Method",
+            "Path",
+            "Query",
+            "StatusCode"
+        ]
+
+    def transform(self, log_dict: Dict[str, str]) -> str:
+        values = [str(log_dict.get(name)) for name in self.__COLUMN_NAMES]
 
         return self._separator.join(values)
 
