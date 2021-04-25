@@ -1,3 +1,4 @@
+import json
 import abc
 from domain.enums import LogType
 from typing import Dict
@@ -54,10 +55,26 @@ class UserFeedbackLikeSimilarMovieTransformer(Transformer):
 
     def __init__(self, separator: str = "\t") -> None:
         super().__init__(separator=separator)
+        self.__JSON_FIELDS = [
+            "movie_id",
+            "model_type",
+            "like"
+        ]
 
     def transform(self, log_dict: Dict[str, str]) -> str:
-        pass
 
+        # 一階層目の項目を取得
+        values = [
+            log_dict.get("Level"),
+            log_dict.get("Time")
+        ]
+
+        # JSONでログ出力されている項目を取得
+        json_message = json.loads(log_dict.get("Message"))
+        for field in self.__JSON_FIELDS:
+            values.append(str(json_message.get(field)))
+
+        return self._separator.join(values)
 
 
 def create_transformer(log_type: LogType) -> Transformer:

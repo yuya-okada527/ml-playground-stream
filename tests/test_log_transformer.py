@@ -1,3 +1,4 @@
+import json
 import time
 from datetime import datetime
 from domain.log_transformer import CoreApiAccessTransformer, CoreApiAppTransformer, UserFeedbackLikeSimilarMovieTransformer, create_transformer
@@ -55,6 +56,28 @@ def test_core_api_access_transformer_transform():
 
     # 期待値
     expected = f"{date_time}\t{process_time}\t127.0.0.1\tGET\t/path\tkey=value\t200"
+
+    # 検証
+    assert transformer.transform(log_dict) == expected
+
+
+def test_user_feedback_transformer_transform():
+
+    # テストデータ
+    transformer = UserFeedbackLikeSimilarMovieTransformer()
+    date_time = datetime.now().isoformat()
+    log_dict = {
+        "Level": "info",
+        "Time": date_time,
+        "Message": json.dumps({
+            "movie_id": 0,
+            "model_type": "tmdb-sim",
+            "like": 0
+        })
+    }
+
+    # 期待値
+    expected = f"info\t{date_time}\t0\ttmdb-sim\t0"
 
     # 検証
     assert transformer.transform(log_dict) == expected
