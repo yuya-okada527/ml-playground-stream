@@ -24,4 +24,4 @@ def extract_logs(event, context):
 
 def load_to_gcs(event, context):
 
-    print("event: {event}")
+    print(f"event: {event}")
