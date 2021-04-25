@@ -33,6 +33,10 @@ def extract_logs_service(
         # ログタイプごとにデータを保持
         log_data[log_type].append(log_type.transform(log_dict))
 
+    for log_type, records in log_data.items():
+        for r in records:
+            print(r)
+
 
 def _is_not_app_log(log_message: str) -> bool:
     # Noneの場合、アプリログではない
