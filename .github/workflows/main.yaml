@@ -59,3 +59,4 @@ jobs:
         run: npm run sls:deploy
         env:
           CREDENTIALS_PATH: secrets/keyfile.json
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}

@@ -27,6 +27,8 @@ functions:
       - event:
           eventType: providers/cloud.pubsub/eventTypes/topic.publish
           resource: projects/ml-playground-306716/topics/ml-playground-log-export-topic
+    environment:
+      GCP_PROJECT_ID: ${env:GCP_PROJECT_ID}
 
 custom:
   pythonRequirements:
