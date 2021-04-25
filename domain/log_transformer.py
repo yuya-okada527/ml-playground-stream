@@ -1,10 +1,10 @@
 import json
 import abc
-from domain.enums import LogType
 from typing import Dict
+from utils import csv_utils
 
 
-class Transformer(abc.ABC):
+class LogTransformer(abc.ABC):
 
     def __init__(self, separator: str) -> None:
         super().__init__()
@@ -14,7 +14,7 @@ class Transformer(abc.ABC):
         raise NotImplementedError()
 
 
-class CoreApiAppTransformer(Transformer):
+class CoreApiAppTransformer(LogTransformer):
 
     def __init__(self, separator: str = "\t") -> None:
         super().__init__(separator=separator)
@@ -28,10 +28,10 @@ class CoreApiAppTransformer(Transformer):
     def transform(self, log_dict: Dict[str, str]) -> str:
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
-        return self._separator.join(values)
+        return csv_utils.make_record(values, self._separator)
 
 
-class CoreApiAccessTransformer(Transformer):
+class CoreApiAccessTransformer(LogTransformer):
 
     def __init__(self, separator: str = "\t") -> None:
         super().__init__(separator=separator)
@@ -46,12 +46,12 @@ class CoreApiAccessTransformer(Transformer):
         ]
 
     def transform(self, log_dict: Dict[str, str]) -> str:
-        values = [str(log_dict.get(name)) for name in self.__COLUMN_NAMES]
+        values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
-        return self._separator.join(values)
+        return csv_utils.make_record(values, self._separator)
 
 
-class UserFeedbackLikeSimilarMovieTransformer(Transformer):
+class UserFeedbackLikeSimilarMovieTransformer(LogTransformer):
 
     def __init__(self, separator: str = "\t") -> None:
         super().__init__(separator=separator)
@@ -65,25 +65,25 @@ class UserFeedbackLikeSimilarMovieTransformer(Transformer):
 
         # 一階層目の項目を取得
         values = [
-            log_dict.get("Level"),
             log_dict.get("Time")
         ]
 
         # JSONでログ出力されている項目を取得
         json_message = json.loads(log_dict.get("Message"))
         for field in self.__JSON_FIELDS:
-            values.append(str(json_message.get(field)))
+            values.append(json_message.get(field))
 
-        return self._separator.join(values)
+        return csv_utils.make_record(values, self._separator)
 
 
-def create_transformer(log_type: LogType) -> Transformer:
+class MovieSimModelUsedCountTransformer(LogTransformer):
 
-    if log_type == LogType.CORE_API_APP:
-        return CoreApiAppTransformer()
-    elif log_type == LogType.CORE_API_ACCESS:
-        return CoreApiAccessTransformer()
-    elif log_type == LogType.USER_FEEDBACK_LIKE_SIM_MOVIE:
-        return UserFeedbackLikeSimilarMovieTransformer()
+    def __init__(self, separator: str = "\t") -> None:
+        super().__init__(separator)
+        self.__COLUMN_NAMES = [
+            "Time",
+            "Message"
+        ]
 
-    raise ValueError(f"{log_type}は未実装のタイプです")
+    def transform(self, log_dict: Dict[str, str]) -> str:
+        pass

@@ -1,4 +1,3 @@
-from domain.log_transformer import create_transformer
 from domain.enums import LogType
 import json
 from typing import Dict, Generator
@@ -31,11 +30,8 @@ def extract_logs_service(
         if log_type is None:
             continue
 
-        # 変換機を取得
-        transformer = create_transformer(log_type)
-
         # ログタイプごとにデータを保持
-        log_data[log_type].append(transformer.transform(log_dict))
+        log_data[log_type].append(log_type.transformer.transform(log_dict))
 
 
 def _is_not_app_log(log_message: str) -> bool:

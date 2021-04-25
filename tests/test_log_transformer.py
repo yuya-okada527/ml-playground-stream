@@ -1,23 +1,7 @@
 import json
 import time
 from datetime import datetime
-from domain.log_transformer import CoreApiAccessTransformer, CoreApiAppTransformer, UserFeedbackLikeSimilarMovieTransformer, create_transformer
-from domain.enums import LogType
-
-
-def test_create_transformer_core_api_app():
-    actual = create_transformer(LogType.CORE_API_APP)
-    assert isinstance(actual, CoreApiAppTransformer)
-
-def test_create_transformer_core_api_access():
-    actual = create_transformer(LogType.CORE_API_ACCESS)
-    assert isinstance(actual, CoreApiAccessTransformer)
-
-
-def test_create_transformer_user_feedback():
-    actual = create_transformer(LogType.USER_FEEDBACK_LIKE_SIM_MOVIE)
-    assert isinstance(actual, UserFeedbackLikeSimilarMovieTransformer)
-
+from domain.log_transformer import CoreApiAccessTransformer, CoreApiAppTransformer, UserFeedbackLikeSimilarMovieTransformer
 
 def test_core_api_transformer_transform():
 
@@ -77,7 +61,7 @@ def test_user_feedback_transformer_transform():
     }
 
     # 期待値
-    expected = f"info\t{date_time}\t0\ttmdb-sim\t0"
+    expected = f"{date_time}\t0\ttmdb-sim\t0"
 
     # 検証
     assert transformer.transform(log_dict) == expected
