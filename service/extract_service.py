@@ -1,12 +1,15 @@
 from domain.enums import LogType
+from core.config import CoreSettings
 import json
+from google.cloud import pubsub
 from more_itertools import chunked
-from typing import Dict, Generator
+from typing import Dict, Generator, List
 from collections import defaultdict
 from infra.object_storage_repository import ObjectStorageRepository
 
 
 CHUNK_SIZE = 100
+SETTINGS = CoreSettings()
 
 
 def extract_logs_service(
@@ -21,8 +24,11 @@ def extract_logs_service(
         key=object_key
     )
 
+    # Pub/Subクライアントを初期化
+    client = pubsub.PublisherClient()
+
     # 1レコードずつ処理していく
-    log_data = defaultdict(list)
+    log_data: Dict[LogType, List[str]] = defaultdict(list)
     for log_message in _generate_app_log(data):
         # LTSVをパース
         log_dict = _parse_ltsv(log_message)
@@ -40,7 +46,39 @@ def extract_logs_service(
     # チャンクごとに、メッセージ化
     for log_type, records in log_data.items():
         for i, record_chunk in enumerate(chunked(records, CHUNK_SIZE)):
-            pass
+            # オブジェクトのキーを作成
+            object_key = _make_object_key(
+                table_name=log_type.table_name,
+                object_id=object_key,
+                chunk_num=i
+            )
+
+            # メッセージを作成
+            message = _make_message(
+                records=record_chunk,
+                columns=log_type.columns,
+                separator=log_type.transform.separator
+            )
+
+            # メッセージを公開
+            topic = client.topic_path(SETTINGS.gcp_project_id, "load-to-gcs-topic")
+            client.publish(
+                topic=topic,
+                data=message,
+                bucket="ml-playground-log-table-bucket",
+                object_key=object_key
+            )
+
+
+def _make_object_key(table_name: str, object_id: str, chunk_num: int) -> str:
+    # JSON拡張子を削除
+    object_id_without_extension = object_id[:-5]
+    return f"{table_name}/{object_id_without_extension}/{chunk_num}.tsv"
+
+
+def _make_message(records: List[str], columns: List[str], separator: str) -> str:
+    header = separator.join(columns)
+    return header + "\n" + "\n".join(records)
 
 
 def _is_not_app_log(log_message: str) -> bool:

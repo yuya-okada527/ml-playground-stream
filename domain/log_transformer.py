@@ -8,7 +8,7 @@ class LogTransformer(abc.ABC):
 
     def __init__(self, separator: str) -> None:
         super().__init__()
-        self._separator = separator
+        self.separator = separator
 
     def __call__(self, log_dict: Dict[str, str]) -> str:
         raise NotImplementedError()
@@ -28,7 +28,7 @@ class CoreApiAppTransformer(LogTransformer):
     def __call__(self, log_dict: Dict[str, str]) -> str:
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
-        return csv_utils.make_record(values, self._separator)
+        return csv_utils.make_record(values, self.separator)
 
 
 class CoreApiAccessTransformer(LogTransformer):
@@ -48,7 +48,7 @@ class CoreApiAccessTransformer(LogTransformer):
     def __call__(self, log_dict: Dict[str, str]) -> str:
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
-        return csv_utils.make_record(values, self._separator)
+        return csv_utils.make_record(values, self.separator)
 
 
 class UserFeedbackLikeSimilarMovieTransformer(LogTransformer):
@@ -73,7 +73,7 @@ class UserFeedbackLikeSimilarMovieTransformer(LogTransformer):
         for field in self.__JSON_FIELDS:
             values.append(json_message.get(field))
 
-        return csv_utils.make_record(values, self._separator)
+        return csv_utils.make_record(values, self.separator)
 
 
 class MovieSimModelUsedCountTransformer(LogTransformer):
@@ -88,4 +88,4 @@ class MovieSimModelUsedCountTransformer(LogTransformer):
     def __call__(self, log_dict: Dict[str, str]) -> str:
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
-        return csv_utils.make_record(values, self._separator)
+        return csv_utils.make_record(values, self.separator)
