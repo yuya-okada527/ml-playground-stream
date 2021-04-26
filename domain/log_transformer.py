@@ -1,7 +1,7 @@
 import json
 import abc
 from typing import Dict
-from utils import csv_utils
+from utils import csv_utils, format_utils
 
 
 class LogTransformer(abc.ABC):
@@ -26,6 +26,10 @@ class CoreApiAppTransformer(LogTransformer):
         ]
 
     def __call__(self, log_dict: Dict[str, str]) -> str:
+
+        # 日時データをフォーマット
+        log_dict = _convert_datetime_format(log_dict)
+
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
         return csv_utils.make_record(values, self.separator)
@@ -46,6 +50,11 @@ class CoreApiAccessTransformer(LogTransformer):
         ]
 
     def __call__(self, log_dict: Dict[str, str]) -> str:
+
+        # 日時データをフォーマット
+        log_dict = _convert_datetime_format(log_dict)
+
+
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
         return csv_utils.make_record(values, self.separator)
@@ -62,6 +71,9 @@ class UserFeedbackLikeSimilarMovieTransformer(LogTransformer):
         ]
 
     def __call__(self, log_dict: Dict[str, str]) -> str:
+
+        # 日時データをフォーマット
+        log_dict = _convert_datetime_format(log_dict)
 
         # 一階層目の項目を取得
         values = [
@@ -86,6 +98,16 @@ class MovieSimModelUsedCountTransformer(LogTransformer):
         ]
 
     def __call__(self, log_dict: Dict[str, str]) -> str:
+        # 日時データをフォーマット
+        log_dict = _convert_datetime_format(log_dict)
+
         values = [log_dict.get(name) for name in self.__COLUMN_NAMES]
 
         return csv_utils.make_record(values, self.separator)
+
+
+def _convert_datetime_format(log_dict: Dict[str, str]) -> Dict[str, str]:
+    if "Time" in log_dict:
+        log_dict["Time"] = format_utils.format_datetime_string(log_dict["Time"])
+
+    return log_dict

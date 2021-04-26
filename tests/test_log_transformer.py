@@ -1,7 +1,7 @@
 import json
 import time
 from datetime import datetime
-from domain.log_transformer import CoreApiAccessTransformer, CoreApiAppTransformer, MovieSimModelUsedCountTransformer, UserFeedbackLikeSimilarMovieTransformer
+from domain.log_transformer import CoreApiAccessTransformer, CoreApiAppTransformer, MovieSimModelUsedCountTransformer, UserFeedbackLikeSimilarMovieTransformer, _convert_datetime_format
 
 def test_core_api_transformer_transform():
 
@@ -83,3 +83,16 @@ def test_movie_sim_model_used_count_transformer():
 
     # 検証
     assert transformer(log_dict) == expected
+
+
+def test_convert_datetime_format():
+
+    log_dict = {
+        "Time": "2021-04-25 08:19:37,404"
+    }
+
+    expected = {
+        "Time": "2021-04-25 08:19:37"
+    }
+
+    assert _convert_datetime_format(log_dict) == expected
